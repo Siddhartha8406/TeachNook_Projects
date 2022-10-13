@@ -1,5 +1,4 @@
-from tkinter import  Tk, Button, Label, LEFT
-from tracemalloc import start
+from tkinter import  RIGHT, Tk, Button, Label, LEFT
 
 class Timer:
     def __init__(self, timer_time):
@@ -13,11 +12,11 @@ class Timer:
         self.root.config(bg="#24F0E3")
         self.root.title('Counter Timer')
 
-        self.label = Label(self.root, text='Counter Timer', font=('Arial', 50),borderwidth=1)
+        self.label = Label(self.root, text='Timer', font=('Arial', 90),borderwidth=1)
         self.label.pack()
 
-        self.startfun = Button(self.root, text='Start', font=('Arial', 25),command=self.start,borderwidth=1)
-        self.startfun.pack(side=LEFT)
+        self.startbtn = Button(self.root, text='Start', font=('Arial', 25),command=self.start,borderwidth=1)
+        self.startbtn.pack(side=LEFT)
 
         self.stopbtn = Button(self.root, text='Stop', font=('Arial', 25),borderwidth=1, command=self.stop, state='disabled')
         self.stopbtn.pack(side=LEFT)
@@ -25,17 +24,19 @@ class Timer:
         self.resume = Button(self.root, text='Resume', font=('Arial', 25),borderwidth=1, command=self.resume, state='disabled')
         self.resume.pack(side=LEFT)
 
-        self.quit = Button(self.root, text='Quit', font=('Arial', 25),borderwidth=1, command=self.root.quit)
-        self.quit.pack(side=LEFT)
+        self.reset = Button(self.root, text='Restart', font=('Arial', 25),borderwidth=1, command=self.restart, state='disabled')
+        self.reset.pack(side=LEFT)
 
-        self.reset = Button(self.root, text='Reset', font=('Arial', 25),borderwidth=1, command=self.restart, state='disabled')
-        self.reset.pack()
+        self.quit = Button(self.root, text='Quit', font=('Arial', 25),borderwidth=1, command=self.root.destroy)
+        self.quit.pack()
 
         self.root.mainloop()
 
     def start(self):
+        self.startbtn['state'] = 'disabled'
         if not self.timer_status:
             self.timer_status = True
+            self.main_status = True
             self.resume['state'] = 'disabled'
             self.stopbtn['state'] = 'normal'
         else:
@@ -50,8 +51,11 @@ class Timer:
                     time_left = self.target_time - self.current_time
                     self.label.config(text=time_left)
                     self.current_time += 1
-                print('Here')
-        self.label.after(1000, self.update)
+                elif self.current_time > self.target_time:
+                    self.label.config(text='Time Up!')
+                    self.main_status=False
+                    self.timer_status=False
+            self.label.after(1000, self.update)
 
     def stop(self):
         self.timer_status = False
@@ -64,9 +68,12 @@ class Timer:
         self.stopbtn['state'] = 'normal'
 
     def restart(self):
+        self.timer_status = False
+        self.main_status = False
         self.current_time = 0
         self.start()
 
 if __name__ == "__main__":
-    test = Timer(20)
+    time = int(input("Enter the Time(in sec): "))
+    test = Timer(time)
     test.Create_UI()

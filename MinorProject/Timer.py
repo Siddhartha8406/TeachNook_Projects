@@ -1,4 +1,4 @@
-from tkinter import  RIGHT, Tk, Button, Label, LEFT
+from tkinter import  Tk, Button, Label, LEFT
 
 class Timer:
     def __init__(self, timer_time):
